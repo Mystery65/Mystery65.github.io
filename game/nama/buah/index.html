@@ -6,6 +6,7 @@
     <title>Mystery Names | Hewan</title>
     <link href="/dist/output.css" rel="stylesheet" />
     <link rel="icon" href="../img/logo.png" type="image/x-icon" />
+    <!-- Tambahkan link ke Tailwind CSS -->
   </head>
   <body class="bg-gray-100 min-h-screen flex items-center justify-center">
     <div id="container" class="bg-white p-8 rounded-lg shadow-md">
@@ -54,57 +55,16 @@
     </div>
     <script>
       const words = [
-        "singa",
-        "harimau",
-        "gajah",
-        "monyet",
-        "orangutan",
-        "buaya",
-        "kuala",
-        "ular",
-        "ayam",
-        "tikus",
-        "hamster",
-        "belalang",
-        "semut",
-        "cheetah",
-        "macan tutul",
-        "kucing",
-        "anjing",
-        "pinguin",
-        "jerapah",
-        "laba laba",
-        "jangkrik",
-        "macan",
-        "anjing laut",
-        "beruang madu",
-        "kecoa",
-        "katak",
-        "flamingo",
-        "babi",
-        "kura kura",
-        "kumbang",
-        "kalajengking",
-        "kelinci",
-        "cicak",
-        "nyamuk",
-        "cacing",
-        "ulat bulu",
-        "kupu kupu",
-        "tupai",
-        "tomcat",
-        "panda",
-        "hiu",
-        "paus",
-        "kuda",
-        "axolotl",
-        "salamander",
-        "caecilian",
-        "lumba lumba",
-        "elang",
-        "kuda laut",
-        "ikan badut",
-        "dori",
+        "apel",
+        "jeruk",
+        "pisang",
+        "mangga",
+        "nanas",
+        "anggur",
+        "pepaya",
+        "kiwi",
+        "strawberi",
+        "semangka",
       ];
       let originalWord = "";
       let scrambledWord = "";
@@ -200,45 +160,36 @@
       }
 
       function loseGame() {
-        if (gameIsRunning) {
-          document.getElementById("message").textContent =
-            "Anda kalah! Coba lagi.";
+        document.getElementById("message").textContent =
+          "Anda kalah! Coba lagi.";
+        document.getElementById("guess").disabled = true;
+        gameIsRunning = false;
+        document.getElementById("time").style.display = "none";
+        document.getElementById("start-button").style.display = "inline";
+        document.getElementById("exit-button").style.display = "inline";
+        document.getElementById("check-button").disabled = true;
+        loseScore++;
+        localStorage.setItem("loseScore", loseScore);
+        updateScore();
+      }
+
+      function updateTimer() {
+        document.getElementById("time").textContent =
+          "Waktu Tersisa : " + timeLeft;
+        if (timeLeft === 0 || wrongGuessCount >= maxTries) {
+          clearInterval(timer);
+          if (wrongGuessCount < maxTries) {
+            document.getElementById("message").textContent =
+              "Waktu Habis! Game Selesai.";
+          }
           document.getElementById("guess").disabled = true;
+          gameIsRunning = false;
           document.getElementById("time").style.display = "none";
           document.getElementById("start-button").style.display = "inline";
           document.getElementById("exit-button").style.display = "inline";
           document.getElementById("check-button").disabled = true;
-          loseScore++;
-          localStorage.setItem("loseScore", loseScore);
-          updateScore();
-          gameIsRunning = false;
-        }
-      }
-
-      function updateTimer() {
-        if (gameIsRunning) {
-          document.getElementById("time").textContent =
-            "Waktu Tersisa : " + timeLeft;
-          if (timeLeft === 0 || wrongGuessCount >= maxTries) {
-            clearInterval(timer);
-            if (timeLeft === 0) {
-              document.getElementById("message").textContent =
-                "Waktu Habis! Game Selesai.";
-            }
-            if (timeLeft === 0) {
-              loseScore++;
-              localStorage.setItem("loseScore", loseScore);
-              updateScore();
-            }
-            document.getElementById("guess").disabled = true;
-            gameIsRunning = false;
-            document.getElementById("time").style.display = "none";
-            document.getElementById("start-button").style.display = "inline";
-            document.getElementById("exit-button").style.display = "inline";
-            document.getElementById("check-button").disabled = true;
-          } else {
-            timeLeft--;
-          }
+        } else {
+          timeLeft--;
         }
       }
 

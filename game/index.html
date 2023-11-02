@@ -5,13 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Mystery Names | Games</title>
     <link rel="icon" href="../img/logo.png" type="image/x-icon" />
+    <link href="../dist/output.css" rel="stylesheet" />
     <link
       rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+      integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
     />
   </head>
   <body
-    class="bg-blue-500 min-h-screen flex flex-col justify-center items-center"
+    class="relative bg-gradient-to-r from-blue-500 to-purple-500 min-h-screen flex flex-col justify-center items-center"
   >
     <div
       class="lg:bg-white md:bg-white lg:shadow-md md:shadow-md lg:rounded-lg md:rounded-lg p-8 w-full max-w-md text-center"
@@ -23,10 +27,10 @@
           style="background-image: url('../img/SUSUN KATA.png')"
           onclick="redirectToGame('nama/')"
         >
-          <div class="text-center text-[#3498db]">
+          <div class="text-center">
             <h2 class="text-2xl font-bold mb-2">Susun Kata</h2>
             <p class="text-white font-semibold text-sm">
-              Susunlah kata kata yang diacak dalam waktu 10 detik
+              Susunlah kata kata yang diacak dalam waktu 20 detik
             </p>
           </div>
         </div>
@@ -35,14 +39,13 @@
           style="background-image: url('../img/TEBAK\ GAMBAR.png')"
           onclick="redirectToGame('gambar/')"
         >
-          <div class="text-center text-[#3498db]">
+          <div class="text-center">
             <h2 class="text-xl font-bold mb-2">Tebak Gambar</h2>
             <p class="text-white font-semibold text-sm">
-              Tebaklah gambar yang muncul dalam waktu 10 detik
+              Tebaklah gambar yang muncul dalam waktu 20 detik
             </p>
           </div>
         </div>
-        <!-- Game ketiga mengisi satu kotak penuh -->
         <div
           class="p-6 bg-white bg-cover bg-center bg-no-repeat rounded-lg hover:bg-[#2980b9] transform hover:scale-105 transition duration-300 ease-in-out cursor-pointer lg:col-span-2"
           style="background-image: url('../img/COMING\ SOON.png')"
@@ -55,18 +58,75 @@
             </p>
           </div>
         </div>
-        <!-- Tambahkan game keempat di sini jika diperlukan -->
       </div>
-      <!-- Informasi hak cipta -->
       <p class="text-sm text-[#95a5a6] mt-4">&copy; 2023 Mystery Names.</p>
-      <a href="../" class="mt-4 inline-block bg-[#3498db] text-[#fff] font-semibold py-2 px-4 rounded-full transition duration-300 hover:bg-[#2980b9] hover:shadow-lg">
+      <a
+        href="../"
+        class="mt-4 inline-block bg-[#3498db] text-[#fff] font-semibold py-2 px-4 rounded-full transition duration-300 hover:bg-[#2980b9] hover:shadow-lg"
+      >
         Kembali
       </a>
     </div>
+    <div class="absolute top-4 right-4 text-white space-x-4">
+      <span class="text-lg font-bold"
+        >Menang: <span id="win-score">0</span></span
+      >
+      <span class="text-lg font-bold"
+        >Kalah: <span id="lose-score">0</span></span
+      >
+    </div>
+    <audio id="background-music" loop autoplay>
+      <source src="../sound/BACKSOUND.mp3" type="audio/mpeg" />
+      Your browser does not support the audio element.
+    </audio>
+    <button
+      id="toggle-music"
+      class="bg-[#00ED64] text-white w-10 h-10 rounded-full fixed bottom-4 right-4 flex items-center justify-center shadow-md transition-transform transform hover:scale-110"
+    >
+      <i class="fas fa-volume-up"></i>
+    </button>
     <script>
+      const backgroundMusic = document.getElementById("background-music");
+      const toggleMusicButton = document.getElementById("toggle-music");
+      const isMusicPaused = localStorage.getItem("isMusicPaused") === "true";
+      let winScore = localStorage.getItem("winScore") || 0;
+      let loseScore = localStorage.getItem("loseScore") || 0;
+
+      function updateScore() {
+        document.getElementById("win-score").textContent = winScore;
+        document.getElementById("lose-score").textContent = loseScore;
+      }
+
+      updateScore();
+      
+      if (isMusicPaused) {
+        backgroundMusic.pause();
+        toggleMusicButton.innerHTML = '<i class="fas fa-volume-off"></i>';
+      } else {
+        backgroundMusic.play();
+        toggleMusicButton.innerHTML = '<i class="fas fa-volume-up"></i>';
+      }
+
+      toggleMusicButton.addEventListener("click", () => {
+        if (backgroundMusic.paused) {
+          backgroundMusic.play();
+          toggleMusicButton.innerHTML = '<i class="fas fa-volume-up"></i>';
+          localStorage.setItem("isMusicPaused", "false");
+        } else {
+          backgroundMusic.pause();
+          toggleMusicButton.innerHTML = '<i class="fas fa-volume-off"></i>';
+          localStorage.setItem("isMusicPaused", "true");
+        }
+      });
+
+      backgroundMusic.volume = 0.4;
+
       function redirectToGame(url) {
         window.location.href = url;
       }
+      document.addEventListener("contextmenu", function (e) {
+        e.preventDefault();
+      });
     </script>
   </body>
 </html>

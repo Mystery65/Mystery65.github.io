@@ -3,193 +3,80 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Tebak Gambar Hewan</title>
+    <title>Mystery Names | Kategori</title>
+    <link rel="icon" href="../../img/logo.png" type="image/x-icon" />
     <link href="/dist/output.css" rel="stylesheet" />
   </head>
-  <body class="bg-gray-200 p-4">
-    <div class="container mx-auto bg-white p-6 rounded-lg shadow-lg">
-      <h1 class="text-2xl font-bold mb-4">Tebak Gambar Hewan</h1>
-      <div class="mb-4">
-        <img
-          id="gambarHewan"
-          src="kuda.jpg"
-          alt="Gambar Hewan"
-          class="w-64 h-64 object-cover mx-auto"
-        />
+  <body class="bg-gray-100">
+    <div class="container mx-auto mt-10 p-4">
+      <h1 class="text-2xl font-bold mb-4">Pilih Game Favorit Anda</h1>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div class="bg-white rounded-lg shadow-md p-4">
+          <img
+            src="../../img/Tebak gambar.png"
+            alt="Game 1"
+            class="w-full h-40 object-cover mb-2"
+          />
+          <h2 class="text-lg font-semibold">Tebak Gambar | Hewan</h2>
+          <p class="text-gray-600">
+            Tebaklah gambar yang diacak selama 20 detik
+          </p>
+          <button
+            onclick="redirect('/game/gambar/hewan/')"
+            class="mt-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+          >
+            Pilih
+          </button>
+        </div>
+        <div class="bg-white rounded-lg shadow-md p-4">
+          <img
+            src="../../img/Tebak buah.png"
+            alt="Game 2"
+            class="w-full h-40 object-cover mb-2"
+          />
+          <h2 class="text-lg font-semibold">Tebak Gambar | Buah</h2>
+          <p class="text-gray-600">
+            Tebaklah gambar yang diacak selama 20 detik
+          </p>
+          <button
+            onclick="redirect('/game/gambar/buah')"
+            class="mt-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+          >
+            Pilih
+          </button>
+        </div>
       </div>
-      <div class="mb-4">
-        <input
-          type="text"
-          id="jawaban"
-          class="w-full p-2 border rounded-md"
-          placeholder="Tebak Nama Hewan"
-        />
+      <div class="mt-4">
+        <a href="/game" class="text-blue-500 hover:underline"
+          >Kembali ke Game Menu</a
+        >
       </div>
-      <button
-        id="cekJawaban"
-        class="bg-blue-500 text-white px-4 py-2 rounded-md"
-      >
-        Cek Jawaban
-      </button>
-      <button
-        id="mulaiLagi"
-        class="bg-green-500 text-white px-4 py-2 rounded-md"
-        style="display: none"
-      >
-        Mulai Lagi
-      </button>
-      <button
-        id="keluar"
-        class="bg-red-500 text-white px-4 py-2 rounded-md"
-        style="display: none"
-      >
-        Keluar
-      </button>
-      <p id="hasilJawaban" class="mt-4 text-green-500 font-bold"></p>
-      <p id="waktuTersisa" class="mt-4 text-red-500 font-bold">
-        Waktu Tersisa: 10 detik
-      </p>
     </div>
-
+    <div class="absolute top-4 right-4 text-black space-x-4">
+      <span class="text-lg font-bold"
+        >Menang: <span id="win-score">0</span></span
+      >
+      <span class="text-lg font-bold"
+        >Kalah: <span id="lose-score">0</span></span
+      >
+    </div>
     <script>
-      const gambarHewan = document.getElementById("gambarHewan");
-      const jawabanInput = document.getElementById("jawaban");
-      const cekJawabanButton = document.getElementById("cekJawaban");
-      const mulaiLagiButton = document.getElementById("mulaiLagi");
-      const hasilJawaban = document.getElementById("hasilJawaban");
-      const waktuTersisa = document.getElementById("waktuTersisa");
-      const keluar = document.getElementById("keluar");
+      let winScore = localStorage.getItem("winScore") || 0;
+      let loseScore = localStorage.getItem("loseScore") || 0;
 
-      let timer;
-      let waktuMulai = 10; // Waktu mulai dalam detik
-      let waktuHabis = false;
-      let jawabanBenarDimasukkan = false;
-
-      // Daftar gambar hewan dan jawaban yang sesuai
-      const gambarHewanList = [
-        "img/kuda.jpg",
-        "img/anjing.jpg",
-        "img/kucing.jpg",
-        "img/gajah.jpg",
-        "img/gecko.jpg",
-        "img/clownfish.jpeg"
-      ];
-      const jawabanBenarList = ["kuda", "anjing", "kucing", "gajah", "gecko", "ikan badut"];
-
-      // Menampilkan gambar hewan secara acak
-      let currentIndex = 0;
-
-      function tampilkanGambarAcak() {
-        currentIndex = Math.floor(Math.random() * gambarHewanList.length); // Pilih gambar secara acak
-        gambarHewan.src = gambarHewanList[currentIndex];
-        jawabanInput.value = "";
-        hasilJawaban.textContent = "";
-        waktuMulai = 10; // Mengatur ulang waktu mulai ke 10 detik
-        updateWaktuTersisa();
-        waktuHabis = false;
-        jawabanBenarDimasukkan = false;
-        mulaiTimer();
-        jawabanInput.disabled = false; // Mengaktifkan kembali input
-        jawabanInput.focus();
+      function updateScore() {
+        document.getElementById("win-score").textContent = winScore;
+        document.getElementById("lose-score").textContent = loseScore;
       }
 
-      function mulaiTimer() {
-        timer = setInterval(function () {
-          waktuMulai--;
-          updateWaktuTersisa();
-          if (waktuMulai <= 0) {
-            clearInterval(timer);
-            waktuTersisa.textContent = "Waktu Habis";
-            waktuHabis = true;
-            cekJawabanButton.disabled = true;
-            mulaiLagiButton.style.display = "inline-block";
-            keluar.style.display = "inline-block";
-
-            // Mematikan input jika jawaban benar
-            if (jawabanBenarDimasukkan) {
-              jawabanInput.disabled = true;
-            }
-          }
-        }, 1000);
+      updateScore();
+      function redirect(url) {
+        window.location.href = url;
       }
 
-      function updateWaktuTersisa() {
-        waktuTersisa.textContent = `Waktu Tersisa: ${waktuMulai} detik`;
-      }
-
-      // Fokuskan input saat permainan dimulai
-      jawabanInput.focus();
-
-      // Memeriksa jawaban saat tombol "Enter" ditekan
-      jawabanInput.addEventListener("keydown", (event) => {
-        if (event.key === "Enter") {
-          cekJawaban();
-        }
-      });
-
-      // Memeriksa jawaban saat tombol "Cek Jawaban" ditekan
-      cekJawabanButton.addEventListener("click", () => {
-        cekJawaban();
-      });
-
-      function cekJawaban() {
-        if (waktuHabis) {
-          return; // Jangan memproses jawaban jika waktu sudah habis
-        }
-
-        const jawaban = jawabanInput.value.toLowerCase().trim();
-        if (jawaban === jawabanBenarList[currentIndex]) {
-          clearInterval(timer);
-          hasilJawaban.textContent = "Jawaban Benar!";
-          cekJawabanButton.disabled = true;
-          mulaiLagiButton.style.display = "inline-block";
-          jawabanInput.disabled = true;
-          jawabanBenarDimasukkan = true;
-          keluar.style.display = "inline-block";
-        } else {
-          hasilJawaban.textContent = "Jawaban Salah. Coba lagi.";
-        }
-        waktuTersisa.textContent = "";
-      }
-
-      mulaiLagiButton.addEventListener("click", () => {
-        tampilkanGambarAcak();
-        cekJawabanButton.disabled = false;
-        mulaiLagiButton.style.display = "none";
-      });
-
-      keluar.addEventListener("click", () => {
-        window.location.href = "/game/";
-      });
-
-      // Saat memuat halaman, tampilkan gambar pertama
-
-      window.onload = function () {
-        let timerInterval;
-        Swal.fire({
-          title: "Game Akan dimulai!",
-          html: "Dalam waktu <b></b> detik.",
-          timer: 3000,
-          allowOutsideClick: false,
-          timerProgressBar: true,
-          didOpen: () => {
-            Swal.showLoading();
-            const b = Swal.getHtmlContainer().querySelector("b");
-            timerInterval = setInterval(() => {
-              const secondsLeft = Math.ceil(Swal.getTimerLeft() / 1000); // Remove decimal part
-              b.textContent = `${secondsLeft}`;
-            }, 100);
-          },
-          willClose: () => {
-            clearInterval(timerInterval);
-            tampilkanGambarAcak();
-          },
-        });
-      };
-      document.addEventListener('contextmenu', function(e) {
+      document.addEventListener("contextmenu", function (e) {
         e.preventDefault();
-    });
+      });
     </script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   </body>
 </html>

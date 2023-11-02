@@ -1,209 +1,58 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Game Susun Nama</title>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mystery Names | Kategori</title>
+    <link rel="icon" href="../../img/logo.png" type="image/x-icon" />
     <link href="/dist/output.css" rel="stylesheet" />
-    <!-- Tambahkan link ke Tailwind CSS -->
-  </head>
-  <body class="bg-gray-100 min-h-screen flex items-center justify-center">
-    <div id="container" class="bg-white p-8 rounded-lg shadow-md">
-      <h1 class="text-2xl font-bold mb-4">Game Susun Nama</h1>
-      <p id="word" class="text-xl mb-4"></p>
-      <input
-        type="text"
-        id="guess"
-        placeholder="Tebak Kata"
-        onkeydown="if (event.key === 'Enter') checkGuess()"
-        class="border border-gray-300 rounded-lg px-4 py-2 w-full mb-4 focus:outline-none focus:ring focus:border-blue-300"
-      />
-      <button
-        onclick="checkGuess()"
-        class="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600"
-        id="check-button"
+</head>
+<body class="bg-gray-100">
+    <div class="container mx-auto mt-10 p-4">
+        <h1 class="text-2xl font-bold mb-4">Pilih Game Favorit Anda</h1>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div class="bg-white rounded-lg shadow-md p-4">
+                <img src="../../img/SUSUN KATA(1).png" alt="Game 1" class="w-full h-40 object-cover mb-2">
+                <h2 class="text-lg font-semibold">Susun Kata Hewan</h2>
+                <p class="text-gray-600">Susunlah kata-kata yang diacak menjadi nama hewan</p>
+                <button onclick="redirect('/game/nama/hewan/')" class="mt-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Pilih</button>
+            </div>
+            <div class="bg-white rounded-lg shadow-md p-4">
+                <img src="../../img/SUSUN BUAH.png" alt="Game 2" class="w-full h-40 object-cover mb-2">
+                <h2 class="text-lg font-semibold">Susun Kata Buah</h2>
+                <p class="text-gray-600">Susunlah kata-kata yang diacak menjadi nama buah.</p>
+                <button onclick="redirect('/game/nama/buah/')" class="mt-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Pilih</button>
+            </div>
+            
+        </div>
+        <div class="mt-4">
+          <a href="/game" class="text-blue-500 hover:underline">Kembali ke Game Menu</a>
+        </div>
+    </div>
+    <div class="absolute top-4 right-4 text-black space-x-4">
+      <span class="text-lg font-bold"
+        >Menang: <span id="win-score">0</span></span
       >
-        Cek
-      </button>
-      <p id="message" class="text-red-600 mt-2"></p>
-      <p id="time" class="text-gray-600 mt-2"></p>
-      <!-- <p id="time-up" class="text-red-600 mt-2">Waktu Habis! Game Selesai.</p> -->
-      <button
-        id="start-button"
-        onclick="window.location.href = `/game/nama`"
-        class="bg-green-500 text-white py-2 px-4 rounded-lg mt-4 hidden"
+      <span class="text-lg font-bold"
+        >Kalah: <span id="lose-score">0</span></span
       >
-        Mulai Lagi
-      </button>
-      <button
-        id="exit-button"
-        onclick="exitGame()"
-        class="bg-red-500 text-white py-2 px-4 rounded-lg mt-4 hidden"
-      >
-        Keluar
-      </button>
     </div>
     <script>
-      const words = [
-        "singa",
-        "harimau",
-        "gajah",
-        "monyet",
-        "orangutan",
-        "buaya",
-        "kuala",
-        "ular",
-        "ayam",
-        "tikus",
-        "hamster",
-        "belalang",
-        "semut",
-        "cheetah",
-        "macan tutul",
-        "kucing",
-        "anjing",
-        "pinguin",
-        "jerapah",
-        "laba laba",
-        "jangkrik",
-        "macan",
-        "anjing laut",
-        "beruang madu",
-        "kecoa",
-        "katak",
-        "flamingo",
-        "babi",
-        "kura kura",
-        "kumbang",
-        "kalajengking",
-        "kelinci",
-        "cicak",
-        "nyamuk",
-        "cacing",
-        "ulat bulu",
-        "kupu kupu",
-        "tupai",
-        "tomcat",
-        "panda",
-        "hiu",
-        "paus",
-        "kuda",
-        "axolotl",
-        "salamander",
-        "caecilian",
-        "lumba²",
-        "elang",
-        "kuda laut",
-        "ikan badut",
-        "dori",
-      ];
-      let originalWord = "";
-      let scrambledWord = "";
-      let timeLeft = 10;
-      let timer;
-      let gameIsRunning = false;
+      function redirect(url) {
+        window.location.href = url;
+      }
+      let winScore = localStorage.getItem("winScore") || 0;
+      let loseScore = localStorage.getItem("loseScore") || 0;
 
-      function startGame() {
-        originalWord = getRandomWord();
-        scrambledWord = scrambleWord(originalWord);
-        document.getElementById("word").textContent = scrambledWord;
-        document.getElementById("guess").disabled = false;
-        document.getElementById("guess").focus();
-        document.getElementById("guess").value = "";
-        document.getElementById("message").textContent = "";
-        document.getElementById("time").style.display = "";
-        document.getElementById("time").textContent =
-          "Waktu Tersisa : " + timeLeft;
-        document.getElementById("start-button").style.display = "none";
-        document.getElementById("exit-button").style.display = "none";
-        document.getElementById("check-button").disabled = false; // Aktifkan tombol "Cek"
-        clearInterval(timer);
-        timeLeft = 10;
-        updateTimer();
-        timer = setInterval(updateTimer, 1000);
-        gameIsRunning = true;
+      function updateScore() {
+        document.getElementById("win-score").textContent = winScore;
+        document.getElementById("lose-score").textContent = loseScore;
       }
 
-      function getRandomWord() {
-        const randomIndex = Math.floor(Math.random() * words.length);
-        return words[randomIndex];
-      }
-
-      function scrambleWord(word) {
-        const wordArray = word.split("");
-        for (let i = wordArray.length - 1; i > 0; i--) {
-          const j = Math.floor(Math.random() * (i + 1));
-          [wordArray[i], wordArray[j]] = [wordArray[j], wordArray[i]];
-        }
-        return wordArray.join("");
-      }
-
-      function checkGuess() {
-        const guess = document.getElementById("guess").value.toLowerCase();
-        if (guess === originalWord) {
-          document.getElementById("message").textContent = "Tebakan Benar!";
-          document.getElementById("guess").value = "";
-          if (gameIsRunning) {
-            clearInterval(timer);
-            gameIsRunning = false;
-            document.getElementById("guess").disabled = true;
-            document.getElementById("time").style.display = "none";
-            document.getElementById("start-button").style.display = "inline";
-            document.getElementById("exit-button").style.display = "inline";
-            document.getElementById("check-button").disabled = true; // Nonaktifkan tombol "Cek"
-          }
-        } else {
-          document.getElementById("message").textContent =
-            "Tebakan Salah, coba lagi.";
-          document.getElementById("guess").value = "";
-        }
-      }
-
-      function updateTimer() {
-        document.getElementById("time").textContent =
-          "Waktu Tersisa : " + timeLeft;
-        if (timeLeft === 0) {
-          clearInterval(timer);
-          document.getElementById("message").textContent =
-            "Waktu Habis! Game Selesai.";
-          document.getElementById("guess").disabled = true;
-          gameIsRunning = false;
-          document.getElementById("time").style.display = "none";
-          document.getElementById("start-button").style.display = "inline";
-          document.getElementById("exit-button").style.display = "inline";
-          document.getElementById("check-button").disabled = true; // Nonaktifkan tombol "Cek"
-        } else {
-          timeLeft--;
-        }
-      }
-
-      function exitGame() {
-        window.location.href = "/game/";
-      }
-
-      window.onload = function () {
-        let timerInterval;
-        Swal.fire({
-          title: "Game Akan dimulai!",
-          html: "Dalam waktu <b></b> detik.",
-          timer: 3000,
-          allowOutsideClick: false,
-          timerProgressBar: true,
-          didOpen: () => {
-            Swal.showLoading();
-            const b = Swal.getHtmlContainer().querySelector("b");
-            timerInterval = setInterval(() => {
-              const secondsLeft = Math.ceil(Swal.getTimerLeft() / 1000); // Remove decimal part
-              b.textContent = `${secondsLeft}`;
-            }, 100);
-          },
-          willClose: () => {
-            clearInterval(timerInterval);
-            startGame();
-          },
-        });
-      };
+      updateScore();
+      document.addEventListener("contextmenu", function (e) {
+        e.preventDefault();
+      });
     </script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  </body>
+</body>
 </html>

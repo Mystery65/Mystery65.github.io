@@ -17,9 +17,8 @@
       crossorigin="anonymous"
       referrerpolicy="no-referrer"
     />
-    <!-- <link href="css/flowbite.min.css" rel="stylesheet" /> -->
   </head>
-  <body class="bg-white">
+  <body class="bg-white relative">
     <nav
       class="flex fixed w-full justify-center items-center px-4 py-2 shadow-md bg-white"
     >
@@ -27,12 +26,18 @@
       <h4 class="font-bold text-xl font-inria mx-2">MYSTERYNAMES</h4>
     </nav>
     <div class="container mx-auto p-4 min-[320px]:h-screen">
-      <div class="lg:flex lg:justify-between min-[320px]:flex min-[320px]:h-screen min-[320px]:justify-center min-[320px]:items-center sm:flex sm:justify-center sm:items-center sm:h-screen items-center py-16">
+      <div
+        class="lg:flex lg:justify-between min-[320px]:flex min-[320px]:h-screen min-[320px]:justify-center min-[320px]:items-center sm:flex sm:justify-center sm:items-center sm:h-screen items-center py-16"
+      >
         <div class="lg:w-1/2 lg:pr-8">
-          <h1 class="min-[320px]:text-2xl sm:text-3xl lg:text-4xl font-bold text-center">
+          <h1
+            class="min-[320px]:text-2xl sm:text-3xl lg:text-4xl font-bold text-center"
+          >
             MYSTERY <span class="text-[#00ED64]">NAMES</span>
           </h1>
-          <p class="min-[320px]:text-sm sm:text-xl lg:text-2xl font-bold text-[#33866E] text-center">
+          <p
+            class="min-[320px]:text-sm sm:text-xl lg:text-2xl font-bold text-[#33866E] text-center"
+          >
             SMKN 65 GAME MADE BY
             <span class="text-[#008000]">STARSHIP GAMES</span>
           </p>
@@ -52,11 +57,14 @@
           </div>
         </div>
         <div class="lg:w-1/2 mt-6 lg:mt-0">
-          <img src="img/Done.png" class="hidden lg:block w-full lg:w-[400px] h-auto mx-auto" />
-        </div>        
+          <img
+            src="img/Done.png"
+            class="hidden lg:block w-full lg:w-[400px] h-auto mx-auto"
+          />
+        </div>
       </div>
     </div>
-    
+
     <div class="bg-[#001E2B] py-16 text-white">
       <div class="container mx-auto">
         <div class="flex flex-col lg:flex-row items-center justify-center">
@@ -105,17 +113,68 @@
       </div>
     </div>
 
-    <footer class="bg-[#001E2B] py-16 text-white font-bold text-center">
-      <div class="container mx-auto">
-        <h1 class="text-2xl lg:text-3xl">READY TO PLAY THE GAME?</h1>
-        <a
-          href="/game/"
-          class="bg-[#00ED64] px-4 py-2 hover:rounded-3xl mt-4 lg:mt-6"
-          >HERE</a
-        >
-        <p class="text-lg mt-8 text-[#AEBBBA">© 2023 Starship Games</p>
+    <footer class="bg-gray-900 text-gray-400 py-8">
+      <div class="container mx-auto flex flex-wrap justify-center">
+        <div class="w-full md:w-1/2 lg:w-1/4 text-center">
+          <h2 class="text-white text-lg font-semibold mb-4">Kontak Kami</h2>
+          <p>Alamat: Jl. IPN RT.09 RW.06, Cipinang Besar Selatan, Jatinegara</p>
+          <p>Email: namesmystery@gmail.com</p>
+          <p>Telepon: +62 851 7528 8749</p>
+        </div>
+        <div class="w-full md:w-1/2 lg:w-1/4 text-center">
+          <h2 class="text-white text-lg font-semibold mb-4">Ikuti Kami</h2>
+          <div class="flex justify-center space-x-4">
+            <a href="https://www.instagram.com/mysterynames_/?igshid=MzRlODBiNWFlZA%3D%3D" class="text-gray-400 hover:text-gray-200"
+              ><i class="fab fa-instagram"></i
+            ></a>
+          </div>
+        </div>
       </div>
     </footer>
+    <audio id="background-music" loop autoplay>
+      <source src="sound/BACKSOUND.mp3" type="audio/mpeg" />
+      Your browser does not support the audio element.
+    </audio>
+    <button
+      id="toggle-music"
+      class="bg-[#00ED64] text-white w-10 h-10 rounded-full fixed bottom-4 right-4 flex items-center justify-center shadow-md transition-transform transform hover:scale-110"
+    >
+      <i class="fas fa-volume-up"></i>
+    </button>
+    <script>
+      const backgroundMusic = document.getElementById("background-music");
+      const toggleMusicButton = document.getElementById("toggle-music");
+      const isMusicPaused = localStorage.getItem("isMusicPaused") === "true";
+      if (isMusicPaused) {
+        backgroundMusic.pause();
+        toggleMusicButton.innerHTML = '<i class="fas fa-volume-off"></i>';
+      } else {
+        backgroundMusic.play();
+        toggleMusicButton.innerHTML = '<i class="fas fa-volume-up"></i>';
+      }
+    
+      toggleMusicButton.addEventListener("click", () => {
+        if (backgroundMusic.paused) {
+          backgroundMusic.play();
+          toggleMusicButton.innerHTML = '<i class="fas fa-volume-up"></i>';
+          localStorage.setItem("isMusicPaused", "false");
+        } else {
+          backgroundMusic.pause();
+          toggleMusicButton.innerHTML = '<i class="fas fa-volume-off"></i>';
+          localStorage.setItem("isMusicPaused", "true");
+        }
+      });
+    
+      backgroundMusic.volume = 0.4;
+    
+      function redirectToGame(url) {
+        window.location.href = url;
+      }
+
+      document.addEventListener("contextmenu", function (e) {
+        e.preventDefault();
+      });
+    </script>
     <script src="/js/flowbite.min.js"></script>
   </body>
 </html>
